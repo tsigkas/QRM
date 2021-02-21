@@ -71,11 +71,11 @@ p <- ncol(X)
 ```
 
 
-We now create some exploratory plots to study their evolution in time (acf of X and X^2), their marginal distributions, their joint behavior.
+We now create some exploratory plots to study their evolution in time (acf of X and X^2), their marginal distributions and their joint behavior.
 
 ```{r}
 ## Basic plot: use functions plot.zoo, pairs, histograms 
-# eventually draw acf, pacf for each margin
+# Further: acf, pacf for each margin
 
 plot.zoo(X, main = "Negative log-returns")
 
@@ -127,7 +127,8 @@ Next we compute the standardized residuals for each margin, and plot these
 
 ```{r}
 # a matrix n x p containing the standardized marginal residuals 
-Z <- as.matrix(do.call(merge, lapply(fits, residuals, standardize = TRUE))) # grab out standardized residuals
+Z <- as.matrix(do.call(merge, lapply(fits, residuals, standardize = TRUE))) 
+# grab out standardized residuals
 colnames(Z) <- colnames(S)
 
 # visualize the standardized residuals 
@@ -200,7 +201,7 @@ fit.tc <- fitCopula(tCopula(dim = p, dispstr = "un"),
 # fitted copula
 tc <- fit.tc@copula 
 
-## Compute matrices of pairwise Kendall's tau and upper tail-dependence coefficients
+## Compute matrices of pairwise Kendall's tau and  tail-dependence coefficients
 p2P(tau(tc))
 p2P(lambda(tc)[(choose(p,2)+1):(p*(p-1))])
 ```
@@ -229,7 +230,8 @@ X.lst <- lapply(1:B, function(b) {
                                  distfit = Z.[,j, drop = FALSE])))
   
   ## 4) Extract simulated series
-  sapply(sim, function(x) fitted(x)) # simulated multivariate series X_t x@simulation$seriesSim
+  # simulated multivariate series X_t x@simulation$seriesSim
+  sapply(sim, function(x) fitted(x)) 
 })
 
 
@@ -237,21 +239,22 @@ X.lst <- lapply(1:B, function(b) {
  
  Which gererates a List of length B containing (n x p)-matrices
 
-### 5) Predict the aggregated loss and VaR$_{0.99}$
+### 5) Predicting the aggregated loss and VaR$_{0.99}$
+In the next steps, we use the simulated data to measure the Value at Risk of an equally weighted portfolio of the analysed stocks, by:
 
-5.1) Compute the aggregated loss by summing up the losses of all $p=5$ constituants at each time $t$ in the original data $X$.
+5.1) Computing the aggregated portfolio loss by summing up the losses of all $p=5$ constituants at each time $t$ in the original data $X$.
 
-5.2) Compute the aggregated losses for each simulated matrix in the list 'X.lst' : We thus obtain $B$ instances of the simulated losses over time. 
+5.2) Computing the aggregated losses for each simulated matrix in the list 'X.lst' :thus obtaining $B$ instances of the simulated losses over time. 
 
-The predicted loss is the average over all simulated losses. Compute an $\alpha$-confidence interval by taking the $\alpha/2$ and $1-\alpha/2$ empirical quantiles of the simulated losses.
+The predicted loss is the average over all simulated losses due to the equal weights. An $\alpha$-confidence interval is computed by taking the $\alpha/2$ and $1-\alpha/2$ empirical quantiles of the simulated losses.
 
-5.3) Compute the VaR$_{0.99}$ based on the simulated losses, and plot them together with the original return data.
+5.3) Computing the VaR$_{0.99}$ based on the simulated losses, and plotting them together with the original return data.
 
 
 
 ```{r}
 # aggregated loss; n-vector
-Xs <- rowSums(X) 
+Xs <- rowSums(X)
 
 # simulated aggregated losses; (m, B)-matrix
 Xs. <- sapply(X.lst, rowSums) 
@@ -276,7 +279,7 @@ tm <- index(SP500_const)
 start <- match(time[1], as.character(tm))
 past <- tm[start:(start+n-1)]
 future <- tm[(start+n):(start+n+m-1)]
-plot(past, Xs, type = "l", xlim = range(c(past, future)), xlab = "", ylab = "") # actual (past) losses
+  plot(past, Xs, type = "l", xlim = range(c(past, future)), xlab = "", ylab = "") #past losses
 polygon(c(future, rev(future)), c(Xs.CI[1,], rev(Xs.CI[2,])),
         border = NA, col = "grey80") # CI region
 lines(future, Xs.mean, col = "royalblue3") # predicted aggregated loss
@@ -294,7 +297,7 @@ legend("bottomright", bty = "n", lty = rep(1, 4),
 
 ##### References
 
-This tutorial is bases on R code from [QRMtutorials.org](https://www.qrmtutorial.org/r-code)
+This tutorial is based on R code from [QRMtutorials.org](https://www.qrmtutorial.org/r-code)
 
 
 
