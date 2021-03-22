@@ -47,8 +47,9 @@ head(DJ_const[,1:10],5)
 ```
 We will only focus on the 10 first constituents, starting from January $1^{st}$, 2000.
 
-* Compute the daily log-returns using the function `returns` in the package **qrmtools**.
-* Compute the weekly log-returns. (*hint*: Use the daily log-returns series and `apply.weekly` from **xts**).
+In the code below, we:
+
+* Compute the daily and weekly log-returns using the function `returns` 
 * Plot the daily (and weekly) log-returns of each constituent. 
 
 ```{r}
@@ -186,9 +187,6 @@ fit.GH.sym.w <- fit.ghypmv(X.w, symmetric = TRUE, nit = max.iter, silent = TRUE)
 fit.t.skw.d   <- fit.tmv   (X.d, symmetric = FALSE, nit = max.iter, silent = TRUE) # t
 fit.NIG.skw.d <- fit.NIGmv (X.d, symmetric = FALSE, nit = max.iter, silent = TRUE) # normal inverse Gaussian
 fit.GH.skw.d  <- fit.ghypmv(X.d, symmetric = FALSE, nit = max.iter, silent = TRUE) # generalized hyperbolic
-## Note: Warnings are due to deprecated recycling of an array of length 1 ('ghyp' problem)
-
-#fit.GH.skw.d@gamma # skewness parameters
 
 ```
 
@@ -199,8 +197,6 @@ fit.t.skw.w   <- fit.tmv   (X.w, symmetric = FALSE, nit = max.iter, silent = TRU
 fit.NIG.skw.w <- fit.NIGmv (X.w, symmetric = FALSE, nit = max.iter, silent = TRUE) # normal inverse Gaussian
 fit.GH.skw.w  <- fit.ghypmv(X.w, symmetric = FALSE, nit = max.iter, silent = TRUE) # generalized hyperbolic
 
-## Note: Warnings are due to deprecated recycling of an array of length 1 ('ghyp' problem)
-#fit.GH.skw.d@gamma # skewness parameters
 
 ```
 
